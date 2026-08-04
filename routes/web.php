@@ -3,7 +3,9 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\AuthController;
+use App\Http\Middleware\AuthMiddleware;
 
+Route::middleware(['auth.custom'])->group(function (){
 Route::get('/', function () {
     return view('welcome');
 });
@@ -18,12 +20,27 @@ Route::get('/home', function (){
 Route::get('/employee', [EmployeeController::class, 'index'])
 ->name('emloyeIndex');
 
-Route::get('/employee/header', [EmployeeController::class, 'head'])
-->name('employeeheader');
-
+Route::get('/employee/header', [EmployeeController::class, 'head']);  
 
 Route::get('/register', [AuthController::class, 'showRegister']);
-Route::post('/register', [AuthController::class, 'register']);
 
 Route::get('/login', [AuthController::class, 'showLogin']);
-Route::post('/login', [AuthController::class, 'login']);
+
+
+// Route::get('/employee/header', function () {
+    
+// })->middleware('auth.custom');
+
+
+
+
+});
+
+
+Route::middleware(['password.length'])->group(function () {
+    
+    Route::post('/register', [AuthController::class, 'register']);
+
+    
+    Route::post('/login', [AuthController::class, 'login']);
+});

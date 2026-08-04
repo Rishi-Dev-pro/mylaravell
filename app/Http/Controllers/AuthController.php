@@ -16,15 +16,21 @@ class AuthController extends Controller
 
     // Save User
     public function register(Request $request)
-    {
-        User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-        ]);
+{
+    $request->validate([
+        'name' => 'required',
+        'email' => 'required|email|unique:users,email',
+        'password' => 'required|min:8',
+    ]);
 
-        return redirect('/login');
-    }
+    User::create([
+        'name' => $request->name,
+        'email' => $request->email,
+        'password' => Hash::make($request->password),
+    ]);
+
+    return redirect('/login')->with('success', 'Registration Successful');
+}
 
     // Login Page
     public function showLogin()
